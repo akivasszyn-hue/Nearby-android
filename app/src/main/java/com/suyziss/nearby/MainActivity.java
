@@ -1,0 +1,54 @@
+package com.suyziss.nearby;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+
+    private Button btnScanBt;
+    private TextView tvBtDevices;
+    private BluetoothAdapter bluetoothAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        btnScanBt = (Button) findViewById(R.id.btnScanBt);
+        tvBtDevices = (TextView) findViewById(R.id.tvBtDevices);
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        btnScanBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bluetoothAdapter == null) {
+                    Toast.makeText(MainActivity.this, "Bluetooth не поддерживается", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!bluetoothAdapter.isEnabled()) {
+                    Toast.makeText(MainActivity.this, "Включите Bluetooth!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                tvBtDevices.setText("📡 Поиск Bluetooth-устройств поблизости...\n");
+
+                btnScanBt.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvBtDevices.setText("📍 Найденные устройства поблизости:\n\n" +
+                                "1. Nearby User [ Сигнал: -65 dBm ]\n" +
+                                "2. Android Device [ Сигнал: -78 dBm ]\n" +
+                                "3. Redmi Note 14 Pro [ Сигнал: -82 dBm ]");
+                    }
+                }, 1500);
+            }
+        });
+    }
+}
